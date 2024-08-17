@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <title>ASRSB Webapp</title>
+    <link rel='stylesheet' href='/static/style.css'>
+  </head>
+  <body>
+    <h2>Items Requests To QM</h2>
+    <hr>
+    <table>
+      <tr>
+        <th>Section</th>
+        <th>Item</th>
+        <th>Size</th>
+        <th>Quantity</th>
+      </tr>
+      {% for item in items %}
+        <tr>
+          <td>{{item[0]}}</td>
+          <td>{{item[1]}}</td>
+          <td>{{item[2]}}</td>
+          <td>{{item[3]}}</td>
+        </tr>
+      {% endfor %}
+    </table>
+    <hr><br><br>
+    <form method='POST' action='add_item'>
+      <label for='section'>What is your Section?: </label>
+      <input type='text' id='section' name='section' placeholder='Clarinets/Saxophones/etc.'><br>
+      <label for='item'>What Item does the Section Need?: </label>
+      <input type='text' id='item' name='item' placeholder='Reeds/Cloth(For percussion pls specify)'><br>
+      <label for='size'>What Size do you Need?: </label>
+      <input type='text' id='size' name='size' placeholder='For percussion pls write nil'><br>
+      <label for='quantity'>How many do you need?: </label>
+      <input type='number' id='quantity' name='quantity'><br>
+      <input type='submit' value='Submit'>
+    </form><br><br>
+    <a href='/home'>Return To Main Page</a>
+  </body>
+</html>

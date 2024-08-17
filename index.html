@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <title>ASRSB Webapp</title>
+    <link rel='stylesheet' href='/static/style.css'>
+  </head>
+  <header>
+    <h1>Welcome Back To The Band Website!</h1>
+  </header>
+  <body>
+    <a href='/' class='nav'> Return to Mainpage</a>
+    <h2>Here is/are the piece(s) we'll be playing</h2>
+    <hr>
+      <ol>
+        {% for piece in pieces %}
+        <li>
+          {{ piece[0] }}: <a href={{piece[1]}}>{{piece[1]}}</a>
+        </li><br>
+        {% endfor %}
+      </ol>
+    <nav>
+      <a href='/file'>Add a file</a><br>
+      <a href='/item'>Add an item</a>
+    </nav>
+  </body>
+</html>
