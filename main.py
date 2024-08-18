@@ -1,8 +1,23 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for
 import csv
 import sqlite3
 
 app = Flask(__name__)
+
+try:
+    conn = sqlite3.connect('login.db')
+    cursor = conn.cursor()
+    cursor.execute("""
+    CREATE TABLE Student(
+        user_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT NOT NULL,
+        password TEXT NOT NULL
+    );
+    """)
+    conn.commit()  # make changes to db
+    conn.close()  # closes the connection
+except sqlite3.IntegrityError:
+    pieces = []
 
 @app.route('/')
 def index():
@@ -31,7 +46,7 @@ def login():
         conn = sqlite3.connect('login.db')
         cursor = conn.cursor()
         cursor.execute(
-            'SELECT * FROM Login WHERE username=? AND password=?', 
+            'SELECT * FROM Login WHERE username=? AND password=?',
             (username, password)
         )
         user = cursor.fetchone()
@@ -39,7 +54,7 @@ def login():
         if user is None:
             error = 'Invalid username or password'
             return render_template('login.html', error=error, pieces=pieces)
-            
+
         return redirect('/home')
     return redirect('/home')
 
@@ -91,19 +106,19 @@ def add():
     file = request.form['file']
 
     dropbox = 'https://www.dropbox.com'
-    
+
     if file == '' or piece == '':
         return "Please enter a file/piece name"
-    
+
     if file[:23] != dropbox:
         return "Please enter a valid file link"
-        
+
     new_piece = [piece, file]
     # file closes after with block
     with open('files.csv', 'a') as file:
         writer = csv.writer(file)
         writer.writerow(new_piece)
-    
+
     return redirect('/home')
 
 @app.route('/file')
@@ -140,16 +155,16 @@ def item():
 def item_page():
     items = []
     # file closes after with block
-    try:
-        with open('items.csv', 'r') as file:
-            reader = csv.reader(file)
-            next(reader)
-            for row in reader:
-                items.append(row)
-    except FileNotFoundError:
-        return "There are no items needed yet"
+    # try:
+    with open('items.csv', 'r') as file:
+        reader = csv.reader(file)
+        next(reader)
+        for row in reader:
+            items.append(row)
+    # except FileNotFoundError:
+    #     return "There are no items needed yet"
     return render_template('item.html', items=items)
 
 
 if __name__ == '__main__':
-  app.run(debug=True , host='0.0.0.0', port=5000)
+  app.run(debug=True)
