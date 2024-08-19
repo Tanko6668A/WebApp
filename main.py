@@ -5,19 +5,24 @@ import sqlite3
 app = Flask(__name__)
 
 try:
+    # Connect to the database (it will be created if it doesn't exist)
     conn = sqlite3.connect('login.db')
     cursor = conn.cursor()
+    # Create the Student table
     cursor.execute("""
-    CREATE TABLE Student(
+    CREATE TABLE IF NOT EXISTS Student(
         user_id INTEGER PRIMARY KEY AUTOINCREMENT,
-        username TEXT NOT NULL,
+        username TEXT NOT NULL UNIQUE,
         password TEXT NOT NULL
     );
     """)
-    conn.commit()  # make changes to db
-    conn.close()  # closes the connection
-except sqlite3.IntegrityError:
-    pieces = []
+    # Commit changes to the database
+    conn.commit()
+    conn.close
+except sqlite3.IntegrityError as e:
+    # Handle integrity errors (e.g., uniqueness constraint violations)
+    pieces = [{e}]
+    conn.close
 
 @app.route('/')
 def index():
